@@ -20,10 +20,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework', 
+    'rest_framework.authtoken',
     'corsheaders',    
     'drf_spectacular', 
     'ckeditor',
     'ckeditor_uploader',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'qrcode',
 
 
     #apps
@@ -37,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -66,11 +71,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('NAME'),
+        'USER': os.getenv("USER"),
+        'PASSWORD': os.getenv("PASSWORD"),
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -90,14 +98,55 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
 }
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Naka',
-    'DESCRIPTION': 'API документация для проекта Naka',
+    'DESCRIPTION': 'Документация Naka',
     'VERSION': '1.0.0',
 }
 
+
+NIKITA_LOGIN = os.getenv("NIKITA_LOGIN")
+NIKITA_PASSWORD = os.getenv("NIKITA_PASSWORD")
+NIKITA_SENDER = os.getenv("NIKITA_SENDER")
+
+TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake'
+TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.fake.Fake'
+TWO_FACTOR_AUTHENTICATION_METHODS = ['otp_totp']
+
+AML_BASE_URL= os.getenv("AML_BASE_URL")
+AMLBOT_API_TOKEN = os.getenv("AMLBOT_API_TOKEN")
+AML_FORM_ID = os.getenv("AML_FORM_ID")
+PRO_KYC = os.getenv("ProKYC")
+ADVANCED_KYC = os.getenv("AdvancedKYC")
+BASIC_KYC = os.getenv("BasicKYC")
+
+FRONTEND_PASSWORD_RESET_URL = os.getenv("FRONTEND_PASSWORD_RESET_URL")
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "https://nako.navisdevs.ru",
+    "http://localhost:5173",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://nako.navisdevs.ru",
+    "http://localhost:5173",
+]
+CORS_ALLOW_METHODS = (
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+    "DELETE"
+)
 
 
 LANGUAGE_CODE = 'ru'
@@ -109,8 +158,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_URL = 'api_static/'
+STATIC_ROOT = BASE_DIR / 'api_static'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
