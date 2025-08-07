@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/admin/', admin.site.urls),
     path("api/auth/", include("apps.users.urls")),
     path("api/base/", include("apps.home.urls")),
+    path("api/v4/", include("apps.whitebitx.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/backarea/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path("api/schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),

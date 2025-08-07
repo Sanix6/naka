@@ -9,6 +9,7 @@ from .models import User
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, min_length=8, error_messages={"min_length": "Не менее 8 символов."})
     confirm_password = serializers.CharField(write_only=True, required=True, min_length=8,error_messages={"min_length": "Не менее 8 символов."})
 
     class Meta:
@@ -221,5 +222,27 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             raise serializers.ValidationError({"non_field_errors": ["Пароли не совпадают!"]})
 
         validate_password(new_password)
+
+        return attrs
+
+
+class ProfileSetPasswordSerailizer(serializers.Serializer):
+    old_password = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=True, write_only=True, min_length=8, error_messages={"min_length": "Не менее 8 символов."})
+    confirm_password = serializers.CharField(required=True, write_only=True, min_length=8, error_messages={"min_length": "Не менее 8 символов."})
+
+    def validate(self, attrs):
+        old_password = attrs.get("old_password")
+        password = attrs.get("password")
+        confirm_password = attrs.get("confirm_password")
+
+        if password != confirm_password:
+            raise serializers.ValidationError({"non_field_errors": ["Пароли не совпадают!"]})
+        if old_password == password:
+            raise serializers.ValidationError({"password": "Новый пароль не должен совпадать со старым паролем."})
+        if old_password != old_password:
+            raise serializers.ValidationError({"old_password": "Старый пароль неверен."})
+
+        validate_password(password)
 
         return attrs

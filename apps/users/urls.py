@@ -18,4 +18,5 @@ urlpatterns = [
     path('profile/request-phone-code/', RequestPhoneCodeView.as_view()),
     path('profile/confirm-phone-code/', ConfirmPhoneCodeView.as_view()),
     path('kyc-verification/', AmlbotKycRequestView.as_view(), name='kyc-verification'),
+    path('profile/new_password/', ProfileNewPasswordView.as_view(), name='new-password'),
 ]

@@ -41,4 +41,57 @@
  - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>0</status><phones>1</phones><smscnt>1</smscnt></response>
  - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>7</status><phones>0</phones><smscnt>1</smscnt><message>99643985763456</message></response>
  - 99643985763456<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>7</status><phones>0</phones><smscnt>1</smscnt><message>9962435354</message></response>
- - 9962435354
+ - 9962435354<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996557541222<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996557541222<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996234543434</message></response>
+ - 996234543434<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9963</message></response>
+ - 9963<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9963</message></response>
+ - 9963<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9963</message></response>
+ - 9963<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9963409054</message></response>
+ - 9963409054<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9963409054</message></response>
+ - 9963409054<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9963</message></response>
+ - 9963<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99633456566</message></response>
+ - 99633456566<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99633456566</message></response>
+ - 99633456566<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99634546546</message></response>
+ - 99634546546<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99657483945</message></response>
+ - 99657483945<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996637444355</message></response>
+ - 996637444355<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996456754354</message></response>
+ - 996456754354<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996234567645</message></response>
+ - 996234567645<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9963245643</message></response>
+ - 9963245643<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99645643564</message></response>
+ - 99645643564<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99654645455</message></response>
+ - 99654645455<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99654983856</message></response>
+ - 99654983856<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996435645656</message></response>
+ - 996435645656<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996435645656</message></response>
+ - 996435645656<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996435645656</message></response>
+ - 996435645656<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>996</message></response>
+ - 996<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99612</message></response>
+ - 99612<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99612</message></response>
+ - 99612<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99612</message></response>
+ - 99612<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99612</message></response>
+ - 99612<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259864<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99645643</message></response>
+ - 99645643<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99643564</message></response>
+ - 99643564<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99643564</message></response>
+ - 99643564<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99643564</message></response>
+ - 99643564<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>99643564</message></response>
+ - 99643564<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9965984545</message></response>
+ - 9965984545<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259863<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868

@@ -100,6 +100,8 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
@@ -128,17 +130,19 @@ BASIC_KYC = os.getenv("BasicKYC")
 FRONTEND_PASSWORD_RESET_URL = os.getenv("FRONTEND_PASSWORD_RESET_URL")
 
 
+WHITEBIT_BASE_URL = os.getenv("WHITEBIT_BASE_URL")
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "https://nako.navisdevs.ru",
+    "http://naka.kz",
     "http://localhost:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://nako.navisdevs.ru",
-    "http://localhost:5173",
+    "https://naka.kz",
 ]
+
 CORS_ALLOW_METHODS = (
     "GET",
     "OPTIONS",
@@ -160,7 +164,8 @@ USE_TZ = True
 
 STATIC_URL = 'api_static/'
 STATIC_ROOT = BASE_DIR / 'api_static'
-MEDIA_URL = 'media/'
+
+MEDIA_URL = f'{os.getenv("SITE_URL")}/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 

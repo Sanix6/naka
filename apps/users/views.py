@@ -18,6 +18,7 @@ from assets.tamplates import EMAIL_TEMPLATE, NEWPASSWORD_TEMPLATE
 from django.conf import settings
 from assets.services.sms import send_sms
 from assets.services.qrcode import generate_2fa_secret
+from assets.services.validators import format_errors
 import pyotp
 
 class RegisterView(generics.GenericAPIView):
@@ -26,20 +27,27 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
+        
         if serializer.is_valid():
             user = serializer.save()
 
             email_body = EMAIL_TEMPLATE.format(first_name=user.first_name, code=user.code)
 
-            email_data = {'email_subject': 'Подтверждение регистрации','email_body': email_body,'to_email': user.email}
+            email_data = {
+                'email_subject': 'Подтверждение регистрации',
+                'email_body': email_body,
+                'to_email': user.email
+            }
             Util.send_email(email_data)
 
-            return Response({"response": True,
+            return Response({
+                "response": True,
                 "message": "Пользователь зарегистрирован. Код подтверждения отправлен на вашу электронную почту."
             }, status=status.HTTP_201_CREATED)
 
-        return Response({"response": False,"message": "Ошибка при регистрации пользователя."
-        }, status=status.HTTP_400_BAD_REQUEST)
+        error_message = format_errors(serializer.errors)
+        return Response({"response": False, "error": error_message}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class LoginView(generics.GenericAPIView):
@@ -285,7 +293,6 @@ class RequestPhoneCodeView(generics.GenericAPIView):
 
         phone = serializer.validated_data['phone']
         user = request.user
-        user.phone = phone
         user.code = None  
         user.save()
 
@@ -337,3 +344,28 @@ class AmlbotKycRequestView(generics.GenericAPIView):
             return Response(response.json(), status=response.status_code)
         except requests.exceptions.RequestException as e:
             return Response({'error': str(e)}, status=status.HTTP_502_BAD_GATEWAY)
+
+
+
+class ProfileNewPasswordView(generics.GenericAPIView):
+    serializer_class = serializers.ProfileSetPasswordSerailizer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = request.user
+        old_password = serializer.validated_data['old_password']
+        password = serializer.validated_data['password']
+        confirm_password = serializer.validated_data['confirm_password']
+
+        if not user.check_password(old_password):
+            return Response({"error": "Неверный старый пароль."}, status=status.HTTP_400_BAD_REQUEST)
+        if password != confirm_password:
+            return Response({"error": "Пароли не совпадают."}, status=status.HTTP_400_BAD_REQUEST)
+        user.set_password(password)
+        user.save()
+        return Response({"message": "Пароль успешно изменён."}, status=status.HTTP_200_OK)
+
+        
