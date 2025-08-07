@@ -23,3 +23,15 @@ class TickerView(views.APIView):
             return Response(data, status=status.HTTP_200_OK)
         except ConnectionError as e:
             return Response({"error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+
+class FeeView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        client = WhiteBitClient()
+        try:
+            data = client.get_fee()
+            return Response(data, status=status.HTTP_200_OK)
+        except ConnectionError as e:
+            return Response({"error": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)

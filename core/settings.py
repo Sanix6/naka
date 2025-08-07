@@ -135,11 +135,13 @@ WHITEBIT_BASE_URL = os.getenv("WHITEBIT_BASE_URL")
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
+    "https://nako.navisdevs.ru",
     "http://naka.kz",
     "http://localhost:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://nako.navisdevs.ru",
     "https://naka.kz",
 ]
 

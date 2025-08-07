@@ -22,3 +22,13 @@ class WhiteBitClient:
             return response.json()
         except requests.RequestException as e:
             raise ConnectionError(f"WhiteBIT API error: {str(e)}")
+
+        
+    def get_fee(self):
+        url = f"{settings.WHITEBIT_BASE_URL}/api/v4/public/fee"
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            raise ConnectionError(f"WhiteBIT API error: {str(e)}")
