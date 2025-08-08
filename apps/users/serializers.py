@@ -192,7 +192,7 @@ class PersonalSerializer(serializers.ModelSerializer):
     last_activity = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('uuid','first_name', 'last_name', 'surname', 'birth_date', 'country', 'last_activity', 'is_2fa_enabled', 'email',)
+        fields = ('uuid', 'phone', 'first_name', 'last_name', 'surname', 'birth_date', 'country', 'last_activity', 'is_2fa_enabled', 'email',)
     
     def get_last_activity(self, obj):
         if obj.last_activity:

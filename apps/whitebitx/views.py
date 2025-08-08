@@ -3,7 +3,17 @@ from rest_framework import generics, status, views
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from connectors.public.client import WhiteBitClient
+from .serializers import *
 
+
+class CurrencyView(generics.GenericAPIView):
+    queryset = Finance.objects.all()
+    serializer_class = FinanceSerializer
+
+    def get(self, request, *args, **kwargs):
+        currencies = self.get_queryset()
+        serializer = self.get_serializer(currencies, many=True)
+        return Response({'currency': serializer.data})
 
 class MarketsView(views.APIView):
     def get(self, request):

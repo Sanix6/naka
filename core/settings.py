@@ -136,7 +136,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     "https://nako.navisdevs.ru",
-    "http://naka.kz",
+    "https://naka.kz",
     "http://localhost:5173",
 ]
 
