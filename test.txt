@@ -94,4 +94,8 @@
  - 9965984545<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
  - 996703259863<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
  - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
- - 996703259868
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259860<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>1</phones><smscnt>1</smscnt></response>
+ - 996703259868<?xml version="1.0" encoding="UTF-8" standalone="yes"?><response xmlns="http://Giper.mobi/schema/Message"><status>4</status><phones>0</phones><smscnt>1</smscnt><message>9969876546789</message></response>
+ - 9969876546789

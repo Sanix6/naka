@@ -1,5 +1,5 @@
 #restframework
-from rest_framework import generics, status, views
+from rest_framework import generics, status, views,permissions
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -11,7 +11,7 @@ from django.contrib.auth.tokens import default_token_generator
 
 
 #apps
-from .models import User
+from .models import User, Verification
 from . import serializers
 from assets.services.utils import Util, get_password_reset_url
 from assets.tamplates import EMAIL_TEMPLATE, NEWPASSWORD_TEMPLATE
@@ -84,11 +84,11 @@ class LoginView(generics.GenericAPIView):
                 "message": "Успешный вход.",
                 "token": token.key
             }, status=status.HTTP_200_OK)
-
+        error_message = format_errors(serializer.errors)
         return Response({
             "response": False,
             "message": "Ошибка при входе.",
-            "errors": serializer.errors
+            "errors": error_message,
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -316,8 +316,6 @@ class ConfirmPhoneCodeView(generics.GenericAPIView):
             "message": "Телефон подтверждён"
         }, status=status.HTTP_200_OK)
 
-
-
 class AmlbotKycRequestView(generics.GenericAPIView):
     serializer_class = serializers.AmlbotKycRequestSerializer
     permission_classes = [IsAuthenticated]
@@ -341,11 +339,25 @@ class AmlbotKycRequestView(generics.GenericAPIView):
 
         try:
             response = requests.post(url, headers=headers, json=serializer.validated_data)
-            return Response(response.json(), status=response.status_code)
+            response_data = response.json()
+
+            if response.status_code == 200:
+                verification_id = response_data.get("id") or response_data.get("verification_id")
+
+                if verification_id:
+                    Verification.objects.update_or_create(
+                        user=user,
+                        type="personal",  
+                        defaults={
+                            "verification_id": verification_id,
+                            "is_verified": False
+                        }
+                    )
+
+            return Response(response_data, status=response.status_code)
+
         except requests.exceptions.RequestException as e:
             return Response({'error': str(e)}, status=status.HTTP_502_BAD_GATEWAY)
-
-
 
 class ProfileNewPasswordView(generics.GenericAPIView):
     serializer_class = serializers.ProfileSetPasswordSerailizer
@@ -369,3 +381,14 @@ class ProfileNewPasswordView(generics.GenericAPIView):
         return Response({"message": "Пароль успешно изменён."}, status=status.HTTP_200_OK)
 
         
+
+class LegalVerificationView(generics.GenericAPIView):
+    serializer_class = serializers.VerificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

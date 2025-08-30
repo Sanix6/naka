@@ -1,0 +1,100 @@
+/* ===============================
+   Общие стили для форм в админке
+   =============================== */
+
+/* Поля форм (кроме поиска) */
+:root input:not([type="search"]),
+:root select,
+:root textarea {
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 14px;
+    background-color: #fff !important;
+    border: 1px solid #ccc;
+    color: #000 !important;
+    box-shadow: 0 0 8px rgba(0.1, 0.1, 0.1, 0.1);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Для dark theme */
+:root[data-theme="dark"] input:not([type="search"]),
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid #999999;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Фокус */
+:root input:not([type="search"]):focus,
+:root select:focus,
+:root textarea:focus {
+    border-color: #000 !important;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.8) !important;
+    outline: none !important;
+}
+
+
+/* ===============================
+   Кнопки действий (actions)
+   =============================== */
+
+:root .actions input[type="submit"],
+:root .submit-row input[type="submit"],
+:root .submit-row button {
+    display: inline-block !important;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background-color: #3cc7bf;
+    border: none;
+    color: #fff !important;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover эффект */
+:root .actions input[type="submit"]:hover,
+:root .submit-row input[type="submit"]:hover,
+:root .submit-row button:hover {
+    background-color: #02918c;
+}
+
+/* Чтобы кнопка не прилипала */
+:root .actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+
+/* ===============================
+   Сайдбар как кнопки
+   =============================== */
+
+:root .sidebar button {
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: rgb(var(--font-default-dark));
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover */
+:root .sidebar button:hover {
+    background: rgba(3, 163, 158, 0.15); /* твой primary */
+    color: #03a39e;
+}
+
+/* Активная кнопка */
+:root .sidebar button.active {
+    background: rgba(3, 163, 158, 0.25);
+    color: #03a39e;
+    font-weight: 600;
+}

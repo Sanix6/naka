@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import News, FeedBack, FAQ
 from django.utils.html import mark_safe
+from unfold.admin import ModelAdmin
 
 
 

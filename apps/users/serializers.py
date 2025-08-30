@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from assets.services.utils import Util, get_password_reset_url
 from assets.tamplates import EMAIL_TEMPLATE
 #apps
-from .models import User
+from .models import User, Verification
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -246,3 +246,14 @@ class ProfileSetPasswordSerailizer(serializers.Serializer):
         validate_password(password)
 
         return attrs
+
+
+
+class VerificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Verification
+        fields = [
+            "type", "name", "inn", "address", "country",
+            "passport_front", "passport_back", "registration_doc",
+            "license_doc", "additional_doc"
+        ]

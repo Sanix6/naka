@@ -1,0 +1,62 @@
+ 
+ -------------- celery@5431329-hc59128 v5.4.0 (opalescent)
+--- ***** ----- 
+-- ******* ---- Linux-5.15.0-142-generic-x86_64-with-glibc2.35 2025-08-18 15:29:49
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         core:0x7fec1a5cf2e0
+- ** ---------- .> transport:   redis://127.0.0.1:6379/1
+- ** ---------- .> results:     redis://127.0.0.1:6379/1
+- *** --- * --- .> concurrency: 2 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . apps.whitebitx.tasks.update_rates_from_ticker
+
+
+worker: Warm shutdown (MainProcess)
+ 
+ -------------- celery@5431329-hc59128 v5.4.0 (opalescent)
+--- ***** ----- 
+-- ******* ---- Linux-5.15.0-142-generic-x86_64-with-glibc2.35 2025-08-27 16:36:03
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         core:0x7f1c1c1cb2e0
+- ** ---------- .> transport:   redis://127.0.0.1:6379/1
+- ** ---------- .> results:     redis://127.0.0.1:6379/1
+- *** --- * --- .> concurrency: 2 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . apps.whitebitx.tasks.update_rates_from_ticker
+
+
+worker: Warm shutdown (MainProcess)
+ 
+ -------------- celery@5431329-hc59128 v5.4.0 (opalescent)
+--- ***** ----- 
+-- ******* ---- Linux-5.15.0-142-generic-x86_64-with-glibc2.35 2025-08-30 16:44:14
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         core:0x7ff6177fb2e0
+- ** ---------- .> transport:   redis://127.0.0.1:6379/1
+- ** ---------- .> results:     redis://127.0.0.1:6379/1
+- *** --- * --- .> concurrency: 2 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . apps.users.task.check_verification_status
+  . apps.whitebitx.tasks.update_rates_from_ticker
+

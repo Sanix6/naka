@@ -5,6 +5,7 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .managers import CustomUserManager
+from assets.choices import TYPE_CHOICES
 
 class User(AbstractUser):
     username = None
@@ -49,3 +50,82 @@ class KYCForm(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.form_id})"
+
+
+class Verification(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE, 
+        related_name='verifications'
+    )
+
+    type = models.CharField(
+        max_length=20,
+        choices=TYPE_CHOICES,
+        verbose_name="Тип верификации"
+    )
+    verification_id = models.CharField(
+        max_length=100,
+        verbose_name="ID верификации",
+        null=True, blank=True,
+        
+    )
+    name = models.CharField(
+        max_length=100,
+        verbose_name="ФИО / Название компании",
+        null=True, blank=True
+    )
+    inn = models.CharField(
+        max_length=20,
+        verbose_name="ИНН / Регистрационный номер",
+        null=True, blank=True
+    )
+    address = models.CharField(
+        max_length=255,
+        verbose_name="Адрес регистрации",
+        null=True, blank=True
+    )
+    country = models.CharField(
+        max_length=100,
+        verbose_name="Страна",
+        null=True, blank=True
+    )
+    is_verified = models.BooleanField(
+        null=True, blank=True,
+        verbose_name="Статус верификации",
+        default=None
+    )
+
+    # === Документы ===
+    passport_front = models.FileField(
+        upload_to="verifications/passports/",
+        verbose_name="Паспорт (лицевая сторона)",
+        null=True, blank=True
+    )
+    passport_back = models.FileField(
+        upload_to="verifications/passports/",
+        verbose_name="Паспорт (оборотная сторона)",
+        null=True, blank=True
+    )
+    registration_doc = models.FileField(
+        upload_to="verifications/registration/",
+        verbose_name="Скан документа о регистрации",
+        null=True, blank=True
+    )
+    license_doc = models.FileField(
+        upload_to="verifications/licenses/",
+        verbose_name="Скан лицензии (при наличии)",
+        null=True, blank=True
+    )
+    additional_doc = models.FileField(
+        upload_to="verifications/other/",
+        verbose_name="Финансовая отчетность / доп. документ",
+        null=True, blank=True
+    )
+
+    class Meta:
+        verbose_name = "Верификация"
+        verbose_name_plural = "Верификации"
+
+    def __str__(self):
+        return f"{self.name} ({self.get_type_display()})"
