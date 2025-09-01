@@ -5,8 +5,8 @@ from celery import shared_task
 import requests
 import os
 from datetime import datetime
-
-from .models import Rates, Finance 
+from django.utils import timezone
+from .models import Rates, Finance, HistoryTransactions
 
 WHITEBIT_BASE_URL = getattr(settings, "WHITEBIT_BASE_URL")
 TICKER_URL = f"{WHITEBIT_BASE_URL}/api/v4/public/ticker"
@@ -88,3 +88,14 @@ def update_rates_from_ticker(self):
 
     log_message("Task finished\n")
     return {"updated": len(to_update), "missing": not_found[:20]}
+
+
+
+
+@shared_task
+def close_expired_transactions():
+    now = timezone.now()
+    updated = HistoryTransactions.objects.filter(
+        expired__lt=now
+    ).exclude(status="4").update(status="4")
+    return f"Обновлено {updated} транзакций"

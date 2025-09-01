@@ -41,12 +41,13 @@ class VerificationAdmin(admin.ModelAdmin):
         "inn", 
         "address"
     )
+    
     ordering = ("-id",)  
     list_per_page = 20  
 
     fieldsets = (
         ("Основная информация", {
-            "fields": ("type", "name", "inn", "address", "country", "is_verified")
+            "fields": ("is_verified", "type", "name", "inn", "address", "country")
         }),
         ("Документы", {
             "fields": (
@@ -58,9 +59,9 @@ class VerificationAdmin(admin.ModelAdmin):
             )
         }),
     )
-    formfield_overrides = {
-        models.BooleanField: {"widget": admin.widgets.AdminRadioSelect}, 
-    }
+    # formfield_overrides = {
+    #     models.BooleanField: {"widget": admin.widgets.AdminRadioSelect}, 
+    # }
     def user_display(self, obj):
         return obj.user.email   
     user_display.short_description = "Пользователь"

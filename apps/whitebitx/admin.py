@@ -42,9 +42,29 @@ class RatesAdmin(admin.ModelAdmin):
 class HistoryTransactionsAdmin(admin.ModelAdmin):
     list_display = (
         "user", "currency_from", "amount_from",
-        "currency_to", "amount_to", "rate", "fee", "created_at"
+        "currency_to", "amount_to", "rate", "fee",'colored_status', "created_at", "type_of_change"
     )
     search_fields = ("user__username", "currency_from__currency", "currency_to__currency")
-    list_filter = ("currency_from", "currency_to", "created_at")
+    list_filter = ('user', 'currency_from', 'currency_to',  'status', "created_at", "type_of_change")
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
+
+    def colored_status(self, obj):
+        colors = {
+            "1": "#2196f3",
+            "2": "#ff9800",
+            "3": "#4caf50",
+            "4": "#f44336",
+        }
+        icons = {
+            "1": "🆕",
+            "2": "⏳",
+            "3": "✅",
+            "4": "❌",
+        }
+        return format_html(
+            '<span style="background-color:{}; color:white; padding:3px 8px; border-radius:6px;">{} {}</span>',
+            colors.get(obj.status, "gray"),
+            icons.get(obj.status, "❔"),
+            obj.get_status_display()
+        )

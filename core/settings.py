@@ -15,6 +15,10 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(), 
         "options": {"queue": "default", "expires": 3600}, 
     },
+    "close-expired-transactions-every-minute": {
+        "task": "apps.whitebitx.tasks.close_expired_transactions",
+        "schedule": crontab(minute="*"), 
+    },
 }
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,6 +61,7 @@ INSTALLED_APPS = [
     'apps.home',
     'apps.users',
     'apps.whitebitx',
+    'apps.notify',
 ]
 
 MIDDLEWARE = [
@@ -124,6 +129,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication'
     ]
 }
 
@@ -207,8 +213,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'na.records7@gmail.com'
-EMAIL_HOST_PASSWORD = 'zkfw efvm pglx latm'
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
@@ -216,6 +222,8 @@ CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
 AUTH_USER_MODEL = 'users.User'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ONESIGNAL_APP_ID = os.getenv("ONESIGNAL_APP_ID")
+ONESIGNAL_API_KEY = os.getenv("ONESIGNAL_API_KEY")
 
 public_key = os.getenv('public_key')
 secret_key = os.getenv('secret_key')
@@ -304,15 +312,16 @@ UNFOLD = {
                 "separator": False,
                 "collapsible": False,
                 "items": [
+                    {"title": _("Пользователи"), "icon": "person", "link": reverse_lazy("admin:users_user_changelist"), "link_type": "button"},
+                    {"title": _("Верификация"), "icon": "verified_user", "link": reverse_lazy("admin:users_verification_changelist"), "link_type": "button"},
+                    {"title": _("Финансы"), "icon": "account_balance_wallet", "link": reverse_lazy("admin:whitebitx_finance_changelist"), "link_type": "button"},
+                    {"title": _("Направление"), "icon": "swap_horiz", "link": reverse_lazy("admin:whitebitx_rates_changelist"), "link_type": "button"},
+                    {"title": _("История транзакций"), "icon": "receipt_long", "link": reverse_lazy("admin:whitebitx_historytransactions_changelist"), "link_type": "button"},
+                    {"title": _("Уведомления"), "icon": "notifications", "link": reverse_lazy("admin:notify_notification_changelist"), "link_type": "button"},
+                    {"title": _("Токены"), "icon": "vpn_key", "link": reverse_lazy("admin:authtoken_tokenproxy_changelist"), "link_type": "button"},
                     {"title": _("Новости"), "icon": "article", "link": reverse_lazy("admin:home_news_changelist"), "link_type": "button"},
-                    {"title": _("Обратный связь"), "icon": "feedback", "link": reverse_lazy("admin:home_feedback_changelist"), "link_type": "button"},
+                    {"title": _("Обратная связь"), "icon": "feedback", "link": reverse_lazy("admin:home_feedback_changelist"), "link_type": "button"},
                     {"title": _("FAQ"), "icon": "help", "link": reverse_lazy("admin:home_faq_changelist"), "link_type": "button"},
-                    {"title": _("Пользователи"), "icon": "people", "link": reverse_lazy("admin:users_user_changelist"), "link_type": "button"},
-                    {"title": _("Верификация"), "icon": "people", "link": reverse_lazy("admin:users_verification_changelist"), "link_type": "button"},
-                    {"title": _("Финансы"), "icon": "people", "link": reverse_lazy("admin:whitebitx_finance_changelist"), "link_type": "button"},
-                    {"title": _("Направление"), "icon": "people", "link": reverse_lazy("admin:whitebitx_rates_changelist"), "link_type": "button"},
-                    {"title": _("История транзакций"), "icon": "people", "link": reverse_lazy("admin:whitebitx_historytransactions_changelist"), "link_type": "button"},
-                    {"title": _("Tokens"), "icon": "key", "link": reverse_lazy("admin:authtoken_tokenproxy_changelist"), "link_type": "button"},
                 ],
             }
         ],
@@ -375,6 +384,9 @@ UNFOLD = {
         "dark": lambda request: static("log.jpg"),
     },
     "STYLES": [
-        lambda request: static("css/admin-fix.css"),
+        lambda request: f"{static('css/admin-style.css')}",
+    ],
+    "SCRIPTS": [
+        lambda request: f"{static('js/admin.js')}",
     ],
 }

@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from apps.users.models import User
+from assets.choices import *
+from assets.services.generator import *
 
 
 
@@ -50,6 +52,7 @@ class Rates(models.Model):
             models.UniqueConstraint(fields=['currency_f', 'currency_t'], name='unique_currency_pair')
         ]
 
+
 class HistoryTransactions(models.Model):
     user = models.ForeignKey(
         User,
@@ -89,13 +92,38 @@ class HistoryTransactions(models.Model):
     )
     fee = models.DecimalField(
         max_digits=20,
-        decimal_places=8,
+        decimal_places=3,
         default=0,
         verbose_name="Комиссия"
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name="Дата создания"
+    )
+    type_of_change = models.CharField(
+        "Тип заявки",
+        max_length=25,
+        choices=TYPE_OF_CHANGE_CHOICES
+    )
+    invoice_to = models.CharField(
+        "Счет получателя",
+        max_length=155,
+        null=True, blank=True
+    )
+    invoice_from = models.CharField(
+        "Счет отправителя",
+        max_length=155,
+        null=True, blank=True
+    )
+    status = models.CharField(
+        "Статус",
+        max_length=77,
+        choices=STATUS_CHOICES
+    )
+    expired = models.DateTimeField(
+        default=get_expired_time,
+        verbose_name="Срок действия",
+        null=True, blank=True
     )
 
     class Meta:

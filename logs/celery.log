@@ -60,3 +60,95 @@ worker: Warm shutdown (MainProcess)
   . apps.users.task.check_verification_status
   . apps.whitebitx.tasks.update_rates_from_ticker
 
+
+worker: Warm shutdown (MainProcess)
+ 
+ -------------- celery@5431329-hc59128 v5.4.0 (opalescent)
+--- ***** ----- 
+-- ******* ---- Linux-5.15.0-142-generic-x86_64-with-glibc2.35 2025-09-01 13:44:56
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         core:0x7f1f8f3132e0
+- ** ---------- .> transport:   redis://127.0.0.1:6379/1
+- ** ---------- .> results:     redis://127.0.0.1:6379/1
+- *** --- * --- .> concurrency: 2 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . apps.users.task.check_verification_status
+  . apps.whitebitx.tasks.close_expired_transactions
+  . apps.whitebitx.tasks.update_rates_from_ticker
+
+
+worker: Warm shutdown (MainProcess)
+ 
+ -------------- celery@5431329-hc59128 v5.4.0 (opalescent)
+--- ***** ----- 
+-- ******* ---- Linux-5.15.0-142-generic-x86_64-with-glibc2.35 2025-09-01 13:46:43
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         core:0x7f22e2e272e0
+- ** ---------- .> transport:   redis://127.0.0.1:6379/1
+- ** ---------- .> results:     redis://127.0.0.1:6379/1
+- *** --- * --- .> concurrency: 2 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . apps.users.task.check_verification_status
+  . apps.whitebitx.tasks.close_expired_transactions
+  . apps.whitebitx.tasks.update_rates_from_ticker
+
+
+worker: Warm shutdown (MainProcess)
+ 
+ -------------- celery@5431329-hc59128 v5.4.0 (opalescent)
+--- ***** ----- 
+-- ******* ---- Linux-5.15.0-142-generic-x86_64-with-glibc2.35 2025-09-01 13:46:49
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         core:0x7fc47da7f2e0
+- ** ---------- .> transport:   redis://127.0.0.1:6379/1
+- ** ---------- .> results:     redis://127.0.0.1:6379/1
+- *** --- * --- .> concurrency: 2 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . apps.users.task.check_verification_status
+  . apps.whitebitx.tasks.close_expired_transactions
+  . apps.whitebitx.tasks.update_rates_from_ticker
+
+
+worker: Warm shutdown (MainProcess)
+ 
+ -------------- celery@5431329-hc59128 v5.4.0 (opalescent)
+--- ***** ----- 
+-- ******* ---- Linux-5.15.0-142-generic-x86_64-with-glibc2.35 2025-09-01 13:47:18
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         core:0x7f1781ecb2e0
+- ** ---------- .> transport:   redis://127.0.0.1:6379/1
+- ** ---------- .> results:     redis://127.0.0.1:6379/1
+- *** --- * --- .> concurrency: 2 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . apps.users.task.check_verification_status
+  . apps.whitebitx.tasks.close_expired_transactions
+  . apps.whitebitx.tasks.update_rates_from_ticker
+

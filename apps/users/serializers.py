@@ -190,13 +190,20 @@ class SetProfileSerializer(serializers.ModelSerializer):
 
 class PersonalSerializer(serializers.ModelSerializer):
     last_activity = serializers.SerializerMethodField()
+    is_verified = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('uuid', 'phone', 'first_name', 'last_name', 'surname', 'birth_date', 'country', 'last_activity', 'is_2fa_enabled', 'email',)
+        fields = ('uuid', 'phone', 'first_name', 'last_name', 'surname', 'birth_date', 'country', 'last_activity', 'is_2fa_enabled', 'email', 'is_verified')
     
     def get_last_activity(self, obj):
         if obj.last_activity:
             return obj.last_activity.strftime('%Y-%m-%d %H:%M')
+        return None
+
+    def get_is_verified(self, obj):
+        verification = obj.verifications.order_by('-id').first()
+        if verification:
+            return verification.is_verified
         return None
     
 class AmlbotKycRequestSerializer(serializers.Serializer):

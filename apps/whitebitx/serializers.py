@@ -22,7 +22,7 @@ class CurrencySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Finance
-        fields = ["id","code", "name", "icon", "networks"]
+        fields = ["id","code", "name", "icon",'decimal', "networks"]
 
     def get_icon(self, obj):
         request = self.context.get("request")
@@ -62,28 +62,63 @@ class RatesSerializer(serializers.ModelSerializer):
 
 
 class CryptoDepositAddressSerializer(serializers.Serializer):
-    ticker = serializers.CharField(required=True)
-    network = serializers.CharField(required=False, allow_null=True, allow_blank=True)
-    # receive_amount = serializers.DecimalField(max_digits=20, decimal_places=8, required=True)
-    # send_ticker = serializers.CharField(required=True) 
-    # send_network = serializers.CharField(required=False, allow_null=True, allow_blank=True)
-    # send_amount = serializers.DecimalField(max_digits=20, decimal_places=8, required=True)
-    send_address = serializers.CharField(required=True)
+    application_id = serializers.IntegerField(required=True)
+    invoice_to = serializers.CharField(required=True)
 
 
-class HistorySerializers(serializers.Serializer):
-    transactionMethod = serializers.IntegerField() 
-    ticker = serializers.CharField(required=True)
+class HistoryTransactionSerializer(serializers.ModelSerializer):
+    currency_from = serializers.SlugRelatedField(
+        queryset=Finance.objects.all(),
+        slug_field='name'
+    )
+    currency_to = serializers.SlugRelatedField(
+        queryset=Finance.objects.all(),
+        slug_field='name'
+    )
+    currency_from_logo = serializers.SerializerMethodField()
+    currency_to_logo = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
+
+    class Meta:
+        model = HistoryTransactions
+        fields = [
+            "currency_from",
+            "currency_to",
+            "currency_from_logo",
+            "currency_to_logo",
+            "application_id",
+            "amount_from",
+            "amount_to",
+            "rate",
+            "fee",
+            "created_at",
+            "type_of_change",
+            "invoice_to",
+            "invoice_from",
+            "status",
+            "expired"
+        ]
+
+    def get_currency_from_logo(self, obj):
+        if obj.currency_from and obj.currency_from.logo:
+            return obj.currency_from.logo.url 
+        return None
+
+    def get_currency_to_logo(self, obj):
+        if obj.currency_to and obj.currency_to.logo:
+            return obj.currency_to.logo.url
+        return None
+
+
+
+class TransactionHistorySerializers(serializers.Serializer):
+    transactionMethod = serializers.IntegerField(required=False) 
     address = serializers.CharField(required=False, allow_blank=True)
-    memo = serializers.CharField(required=False, allow_blank=True)
-    addresses = serializers.ListField(child=serializers.CharField(), required=False)
     uniqueId = serializers.CharField(required=False, allow_blank=True)
-    limit = serializers.IntegerField(required=False, default=100)
-    offset = serializers.IntegerField(required=False, default=0)
-    status = serializers.ListField(child=serializers.IntegerField(), required=False)
+    # status = serializers.ListField(child=serializers.IntegerField(), required=False)
 
 
-class HistoryTransactionsSerializer(serializers.ModelSerializer):
+class CreateApplicationSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
 
     currency_from = serializers.SlugRelatedField(
@@ -100,6 +135,7 @@ class HistoryTransactionsSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
+            "type_of_change",
             "currency_from",
             "currency_to",
             "application_id",
@@ -109,3 +145,11 @@ class HistoryTransactionsSerializer(serializers.ModelSerializer):
             "fee",
             "created_at",
         ]
+
+    def create(self, validated_data):
+        validated_data['status'] = "1"
+        return super().create(validated_data)
+
+
+class StatusSerializers(serializers.Serializer):
+    status = serializers.CharField()

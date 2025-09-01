@@ -24,6 +24,7 @@ class User(AbstractUser):
     is_2fa_enabled = models.BooleanField(default=False)
     phone_verified = models.BooleanField('Телефон подтвержден', default=False)
     is_active = models.BooleanField('Активный', default=False)
+    player_id = models.CharField(max_length=255, blank=True, null=True)
 
 
     USERNAME_FIELD = 'email'
@@ -39,17 +40,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
-
-class KYCForm(models.Model):
-    name = models.CharField(max_length=100) 
-    form_id = models.CharField(max_length=64, unique=True)
-    is_active = models.BooleanField(default=True)
-    description = models.TextField(blank=True)
-    target_group = models.CharField(max_length=100, blank=True) 
-
-    def __str__(self):
-        return f"{self.name} ({self.form_id})"
 
 
 class Verification(models.Model):
@@ -93,7 +83,8 @@ class Verification(models.Model):
     is_verified = models.BooleanField(
         null=True, blank=True,
         verbose_name="Статус верификации",
-        default=None
+        default=None,
+        editable=True
     )
 
     # === Документы ===
@@ -129,3 +120,14 @@ class Verification(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_type_display()})"
+
+
+class KYCForm(models.Model):
+    name = models.CharField(max_length=100) 
+    form_id = models.CharField(max_length=64, unique=True)
+    is_active = models.BooleanField(default=True)
+    description = models.TextField(blank=True)
+    target_group = models.CharField(max_length=100, blank=True) 
+
+    def __str__(self):
+        return f"{self.name} ({self.form_id})"

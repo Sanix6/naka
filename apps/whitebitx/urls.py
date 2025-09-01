@@ -6,7 +6,10 @@ urlpatterns = [
     path('ticker/', TickerView.as_view(), name='ticker'),
     path('fee/', FeeView.as_view(), name='fee'),
     path('currencies/', CurrencyListView.as_view(), name='currencies'),
-    path('get-address/', CryptoDepositAddressGenericView.as_view(), name='crypto_deposit_address'),
-    path('transaction-history/', CheckStatusView.as_view(), name='history_changes'),
-    path('applications-history/', HistoryTransactionsCreateView.as_view(), name='application-history')
+    path('main-address/', CryptoDepositAddressGenericView.as_view(), name='crypto_deposit_address'),
+    path('transaction-history/', TransactionHistoryView.as_view(), name='history_changes'),
+    path('main-applications/', CreateApplicationView.as_view(), name='application-history'),
+    path('main-balance', GETBalance.as_view()),
+    path('main-transaction-list', TransactionsListView.as_view()),
+    path('status/', StatusView.as_view())
 ]
