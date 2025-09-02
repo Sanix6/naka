@@ -3,3 +3,4 @@
 .dump.sql   
 st.py
 test.txtlogs/*.log*
+logs/*.log*
