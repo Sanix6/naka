@@ -19,6 +19,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "apps.whitebitx.tasks.close_expired_transactions",
         "schedule": crontab(minute="*"), 
     },
+    "check-transactions-every-1-minute": {
+        "task": "apps.whitebitx.tasks.check_transactions",
+        "schedule": crontab(minute="*"),  
+    },
 }
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -384,7 +388,7 @@ UNFOLD = {
         "dark": lambda request: static("log.jpg"),
     },
     "STYLES": [
-        lambda request: f"{static('css/admin-style.css')}",
+        lambda request: f"{static('css/adminjs.css')}",
     ],
     "SCRIPTS": [
         lambda request: f"{static('js/admin.js')}",

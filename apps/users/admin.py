@@ -4,6 +4,8 @@ from .models import User, Verification
 from django.contrib.auth.models import Group
 from unfold.admin import ModelAdmin
 from django.db import models
+from django.utils.html import format_html
+
 admin.site.unregister(Group)
 
 
@@ -24,13 +26,13 @@ class VerificationAdmin(admin.ModelAdmin):
     list_display = (
         "id", 
         "user_display",
-        "type",
+        "colored_type",   
         "name",  
         "country", 
         "is_verified",
         "verification_id"
     )
-    list_display_links = list_display
+    list_display_links = ("id", "user_display", "name")
     list_filter = (
         "type",      
         "is_verified",
@@ -59,12 +61,25 @@ class VerificationAdmin(admin.ModelAdmin):
             )
         }),
     )
-    # formfield_overrides = {
-    #     models.BooleanField: {"widget": admin.widgets.AdminRadioSelect}, 
-    # }
+
     def user_display(self, obj):
         return obj.user.email   
     user_display.short_description = "Пользователь"
 
-
+    def colored_type(self, obj):
+        colors = {
+            "personal": "#2196f3",  
+            "company": "#4caf50",  
+            "license": "#ff9800",   
+        }
+        return format_html(
+            '<span style="display:inline-block; padding:4px 10px; '
+            'font-size:12px; font-weight:500; color:white; '
+            'background-color:{}; border-radius:4px; '
+            'box-shadow:0 1px 2px rgba(0,0,0,0.15);">'
+            '{}</span>',
+            colors.get(obj.type, "gray"),
+            obj.get_type_display() if hasattr(obj, "get_type_display") else obj.type
+        )
+    colored_type.short_description = "Тип"
 

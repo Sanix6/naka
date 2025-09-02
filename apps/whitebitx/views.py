@@ -7,12 +7,13 @@ from collections import defaultdict
 from .serializers import *
 from assets.services.generator import generate_application_id
 import os
+from django.utils import timezone
+from datetime import timedelta
 
 
 class CryptoDepositAddressGenericView(generics.GenericAPIView):
     serializer_class = CryptoDepositAddressSerializer
     permission_classes = [IsAuthenticated]
-
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -45,10 +46,10 @@ class CryptoDepositAddressGenericView(generics.GenericAPIView):
 
         transaction.invoice_from = invoice_from
         transaction.invoice_to = invoice_to
-        transaction.save(update_fields=["invoice_from", "invoice_to"])
+        transaction.expired = timezone.now() + timedelta(minutes=60) 
+        transaction.save(update_fields=["invoice_from", "invoice_to", "expired"])
 
         full_data = HistoryTransactionSerializer(transaction).data
-
         return Response(full_data, status=status.HTTP_200_OK)
 
 
@@ -157,7 +158,7 @@ class CurrencyListView(views.APIView):
 
 
 class StatusView(generics.GenericAPIView):
-    serializer_class = StatusSerializers
+    serializer_class = HistoryTransactionSerializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):

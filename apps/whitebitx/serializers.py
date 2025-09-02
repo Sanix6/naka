@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from .models import Finance, Rates, HistoryTransactions
+from django.utils import timezone
+from decimal import Decimal, ROUND_DOWN
+
 
 class NetworkSerializer(serializers.ModelSerializer):
     code = serializers.CharField(source="network")
@@ -78,6 +81,7 @@ class HistoryTransactionSerializer(serializers.ModelSerializer):
     currency_from_logo = serializers.SerializerMethodField()
     currency_to_logo = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", read_only=True)
+    expired = serializers.SerializerMethodField()  
 
     class Meta:
         model = HistoryTransactions
@@ -108,6 +112,31 @@ class HistoryTransactionSerializer(serializers.ModelSerializer):
         if obj.currency_to and obj.currency_to.logo:
             return obj.currency_to.logo.url
         return None
+    
+    def get_expired(self, obj):
+        if obj.expired:
+            local_expired = timezone.localtime(obj.expired)  
+            return local_expired.strftime("%H:%M")
+        return None
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        if instance.currency_from and hasattr(instance.currency_from, "decimal"):
+            precision = instance.currency_from.decimal
+            quant = Decimal("1") / (Decimal("10") ** precision)
+            data["amount_from"] = str(Decimal(instance.amount_from).quantize(quant, rounding=ROUND_DOWN))
+
+        if instance.currency_to and hasattr(instance.currency_to, "decimal"):
+            precision = instance.currency_to.decimal
+            quant = Decimal("1") / (Decimal("10") ** precision)
+            data["amount_to"] = str(Decimal(instance.amount_to).quantize(quant, rounding=ROUND_DOWN))
+
+        return data
+
+    def create(self, validated_data):
+        validated_data['status'] = "2"
+        return super().create(validated_data)
 
 
 
@@ -149,6 +178,21 @@ class CreateApplicationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['status'] = "1"
         return super().create(validated_data)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        if instance.currency_from and hasattr(instance.currency_from, "decimal"):
+            precision = instance.currency_from.decimal
+            quant = Decimal("1") / (Decimal("10") ** precision)
+            data["amount_from"] = str(Decimal(instance.amount_from).quantize(quant, rounding=ROUND_DOWN))
+
+        if instance.currency_to and hasattr(instance.currency_to, "decimal"):
+            precision = instance.currency_to.decimal
+            quant = Decimal("1") / (Decimal("10") ** precision)
+            data["amount_to"] = str(Decimal(instance.amount_to).quantize(quant, rounding=ROUND_DOWN))
+
+        return data
 
 
 class StatusSerializers(serializers.Serializer):

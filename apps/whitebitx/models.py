@@ -121,7 +121,6 @@ class HistoryTransactions(models.Model):
         choices=STATUS_CHOICES
     )
     expired = models.DateTimeField(
-        default=get_expired_time,
         verbose_name="Срок действия",
         null=True, blank=True
     )

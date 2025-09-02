@@ -1,0 +1,141 @@
+:root {
+  /* Общие переменные */
+  --field-radius: 12px;
+  --field-pad-y: 14px;
+  --field-pad-x: 16px;
+  --focus-color: #03a39e;
+  --dark-bg: #1e1e1e;
+  --dark-text: #fff;
+  --light-bg: #fff;
+  --light-text: #111;
+}
+
+/* Контейнер формы */
+.form-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background: var(--dark-bg);
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  transition: background-color .3s ease, box-shadow .3s ease;
+}
+
+:root[data-theme="light"] .form-container {
+  background: var(--light-bg);
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+.form-container input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"]),
+.form-container select:not([data-boolean]),
+.form-container textarea {
+  border-radius: 4px;
+  border: 1px solid #fff;
+  padding: 6px 12px;
+  width: 40%;
+  min-width: 300px;
+  flex: 0 0 40%;
+  box-sizing: border-box;
+  font-size: 16px;
+  background-color: transparent;
+  color: var(--dark-text);
+  display: block;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease, color .15s ease;
+}
+
+:root[data-theme="light"] 
+  .form-container input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"]),
+:root[data-theme="light"] 
+  .form-container select:not([data-boolean]),
+:root[data-theme="light"] 
+  .form-container textarea {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+}
+
+:root[data-theme="dark"] 
+  .form-container input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"]),
+:root[data-theme="dark"] 
+  .form-container select:not([data-boolean]),
+:root[data-theme="dark"] 
+  .form-container textarea {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+  color-scheme: dark;
+}
+
+.form-container input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"]):focus,
+.form-container select:not([data-boolean]):focus,
+.form-container textarea:focus {
+  outline: none;
+  border-color: var(--focus-color);
+  box-shadow: 0 0 0 4px rgba(3,163,158,0.25);
+}
+
+/* Placeholder */
+.form-container input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"])::placeholder,
+.form-container textarea::placeholder {
+  opacity: 0.7;
+  color: #aaa;
+}
+
+:root[data-theme="light"] 
+  .form-container input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"])::placeholder,
+:root[data-theme="light"] 
+  .form-container textarea::placeholder {
+  color: #888;
+}
+
+/* Disabled */
+.form-container input[disabled]:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"]),
+.form-container select[disabled]:not([data-boolean]),
+.form-container textarea[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Ошибка */
+.form-container .error input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"]),
+.form-container .error select:not([data-boolean]),
+.form-container .error textarea {
+  border-color: #e24a4a;
+  box-shadow: 0 0 0 4px rgba(226,74,74,0.2);
+}
+
+/* Кнопки */
+.actions input[type="submit"],
+.submit-row input[type="submit"],
+.submit-row button {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background-color: #03a39e;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform .1s ease, background-color .15s ease, box-shadow .15s ease;
+  box-shadow: 0 6px 14px rgba(3,163,158,.25);
+}
+
+.actions input[type="submit"]:hover,
+.submit-row input[type="submit"]:hover,
+.submit-row button:hover {
+  background-color: #02837f;
+  transform: translateY(-1px);
+}
+
+/* Фокус кнопок (доступность) */
+.actions input[type="submit"]:focus,
+.submit-row input[type="submit"]:focus,
+.submit-row button:focus {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+/* Контейнер кнопок */
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

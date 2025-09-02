@@ -7,6 +7,8 @@ import os
 from datetime import datetime
 from django.utils import timezone
 from .models import Rates, Finance, HistoryTransactions
+from connectors.public.client import WhiteBitClient, WhiteBitPrivateClient
+
 
 WHITEBIT_BASE_URL = getattr(settings, "WHITEBIT_BASE_URL")
 TICKER_URL = f"{WHITEBIT_BASE_URL}/api/v4/public/ticker"
@@ -99,3 +101,44 @@ def close_expired_transactions():
         expired__lt=now
     ).exclude(status="4").update(status="4")
     return f"Обновлено {updated} транзакций"
+
+
+LOG_DIR = os.path.join(settings.BASE_DIR, "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+LOGS_FILE = os.path.join(LOG_DIR, "check_transactions.log")
+
+@shared_task
+def check_transactions():
+    client = WhiteBitPrivateClient(
+        public_key="45f78aa66fb498abdae7c3883fb57ccd",
+        secret_key="c27bb4c14b1e9eaff868548c1ff76d04"
+    )
+
+    history_data = client.get_history(transactionMethod=1)
+    records = history_data.get("records", [])
+
+    with open(LOGS_FILE, "a", encoding="utf-8") as log:
+        log.write("\n=== Запуск проверки транзакций ===\n")
+
+        for record in records:
+            record_address = record.get("address")
+            record_status = record.get("status")
+            record_amount = Decimal(record.get("amount", "0"))
+            record_txid = record.get("transactionId")
+
+            log.write(f"Проверка транзакции {record_txid} | адрес={record_address} | сумма={record_amount} | статус={record_status}\n")
+
+            transactions = HistoryTransactions.objects.filter(
+                invoice_from=record_address,
+            ).exclude(status="3")
+
+            for tx in transactions:
+                if record_status == 3 and record_amount >= tx.amount_from:
+                    old_status = tx.status
+                    tx.status = "3"  
+                    tx.save(update_fields=["status"])
+
+                    log.write(
+                        f"✅ Обновлена заявка {tx.id} | invoice_from={record_address} | "
+                        f"было={old_status}, стало=3 | сумма заявки={tx.amount_from}, сумма перевода={record_amount}\n"
+                    )

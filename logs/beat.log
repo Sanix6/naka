@@ -1,10 +1,6 @@
 celery beat v5.4.0 (opalescent) is starting.
-celery beat v5.4.0 (opalescent) is starting.
-celery beat v5.4.0 (opalescent) is starting.
-celery beat v5.4.0 (opalescent) is starting.
-celery beat v5.4.0 (opalescent) is starting.
 __    -    ... __   -        _
-LocalTime -> 2025-08-18 15:29:59
+LocalTime -> 2025-09-02 12:37:34
 Configuration ->
     . broker -> redis://127.0.0.1:6379/1
     . loader -> celery.loaders.app.AppLoader
@@ -14,37 +10,7 @@ Configuration ->
     . maxinterval -> 5.00 seconds (5s)
 celery beat v5.4.0 (opalescent) is starting.
 __    -    ... __   -        _
-LocalTime -> 2025-08-27 16:36:03
-Configuration ->
-    . broker -> redis://127.0.0.1:6379/1
-    . loader -> celery.loaders.app.AppLoader
-    . scheduler -> django_celery_beat.schedulers.DatabaseScheduler
-
-    . logfile -> [stderr]@%INFO
-    . maxinterval -> 5.00 seconds (5s)
-celery beat v5.4.0 (opalescent) is starting.
-__    -    ... __   -        _
-LocalTime -> 2025-09-01 13:44:56
-Configuration ->
-    . broker -> redis://127.0.0.1:6379/1
-    . loader -> celery.loaders.app.AppLoader
-    . scheduler -> django_celery_beat.schedulers.DatabaseScheduler
-
-    . logfile -> [stderr]@%INFO
-    . maxinterval -> 5.00 seconds (5s)
-celery beat v5.4.0 (opalescent) is starting.
-__    -    ... __   -        _
-LocalTime -> 2025-09-01 13:46:43
-Configuration ->
-    . broker -> redis://127.0.0.1:6379/1
-    . loader -> celery.loaders.app.AppLoader
-    . scheduler -> django_celery_beat.schedulers.DatabaseScheduler
-
-    . logfile -> [stderr]@%INFO
-    . maxinterval -> 5.00 seconds (5s)
-celery beat v5.4.0 (opalescent) is starting.
-__    -    ... __   -        _
-LocalTime -> 2025-09-01 13:46:49
+LocalTime -> 2025-09-02 16:50:06
 Configuration ->
     . broker -> redis://127.0.0.1:6379/1
     . loader -> celery.loaders.app.AppLoader
