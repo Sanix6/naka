@@ -1,0 +1,5 @@
+/logs
+.env    
+.dump.sql   
+st.py
+test.txt
