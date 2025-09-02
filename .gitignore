@@ -2,4 +2,4 @@
 .env    
 .dump.sql   
 st.py
-test.txt
+test.txtlogs/*.log*
