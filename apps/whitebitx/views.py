@@ -7,8 +7,10 @@ from collections import defaultdict
 from .serializers import *
 from assets.services.generator import generate_application_id
 import os
+import uuid
 from django.utils import timezone
 from datetime import timedelta
+from connectors.private.client import WhiteBitTradeClient
 
 
 class CryptoDepositAddressGenericView(generics.GenericAPIView):
@@ -30,6 +32,8 @@ class CryptoDepositAddressGenericView(generics.GenericAPIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        transaction.status = "2"
+
         ticker = transaction.currency_from.currency 
         network = transaction.currency_from.network
 
@@ -47,7 +51,7 @@ class CryptoDepositAddressGenericView(generics.GenericAPIView):
         transaction.invoice_from = invoice_from
         transaction.invoice_to = invoice_to
         transaction.expired = timezone.now() + timedelta(minutes=60) 
-        transaction.save(update_fields=["invoice_from", "invoice_to", "expired"])
+        transaction.save(update_fields=["status", "invoice_from", "invoice_to", "expired"])
 
         full_data = HistoryTransactionSerializer(transaction).data
         return Response(full_data, status=status.HTTP_200_OK)
@@ -59,36 +63,6 @@ class TransactionsListView(generics.ListAPIView):
 
     def get_queryset(self):
         return HistoryTransactions.objects.filter(user=self.request.user).order_by('-created_at')
-
-
-class TransactionHistoryView(generics.GenericAPIView):
-    serializer_class = TransactionHistorySerializers
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        
-        if serializer.is_valid():
-            transaction_method = serializer.validated_data['transactionMethod']
-            address = serializer.validated_data.get('address')
-            unique_id = serializer.validated_data.get('uniqueId')
-            # status_list = serializer.validated_data.get('status')
-
-            client = WhiteBitPrivateClient(public_key='45f78aa66fb498abdae7c3883fb57ccd', secret_key='c27bb4c14b1e9eaff868548c1ff76d04')
-
-            history_data = client.get_history(
-                transactionMethod=transaction_method,
-                address=address,
-                uniqueId=unique_id,
-                # status=status_list
-            )
-
-            if 'error' in history_data:
-                return Response(history_data, status=status.HTTP_400_BAD_REQUEST)
-
-            return Response(history_data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CreateApplicationView(generics.GenericAPIView):
@@ -107,14 +81,6 @@ class CreateApplicationView(generics.GenericAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class GETBalance(views.APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        client = WhiteBitPrivateClient(public_key='45f78aa66fb498abdae7c3883fb57ccd', secret_key='c27bb4c14b1e9eaff868548c1ff76d04')
-        balance = client.get_balance()  
-        return Response(balance)
 
 class CurrencyListView(views.APIView):
     def get(self, request, *args, **kwargs):
@@ -141,8 +107,6 @@ class CurrencyListView(views.APIView):
                     "target_currency": item["target_currency"],
                     "rate": item["rate"],
                     "fixed": item['fixed'],
-                    "min_amount": item["min_amount"],
-                    "max_amount": item["max_amount"],
                     "updated_at": item["updated_at"],
                 }
                 for item in data
@@ -205,6 +169,91 @@ class StatusView(generics.GenericAPIView):
 
 
 
+class WithdrawView(generics.GenericAPIView):
+    serializer_class = WithdrawSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data
+        ticker = data["ticker"]
+        amount = data["amount"]
+        address = data["address"]
+        memo = data.get("memo")
+        network = data.get("network") 
+
+        try:
+            client = WhiteBitTradeClient(
+                public_key='45f78aa66fb498abdae7c3883fb57ccd',
+                secret_key='c27bb4c14b1e9eaff868548c1ff76d04'
+            )
+            payload = {
+                "ticker": ticker,
+                "amount": str(amount),
+                "address": address,
+                "uniqueId": str(uuid.uuid4()), 
+            }
+            if memo:
+                payload["memo"] = memo
+            if network:
+                payload["network"] = network
+
+            result = client.withdraw(**payload)
+            return Response(result, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+
+class GETBalance(views.APIView):
+    def post(self, request, *args, **kwargs):
+        client = WhiteBitPrivateClient(public_key='45f78aa66fb498abdae7c3883fb57ccd', secret_key='c27bb4c14b1e9eaff868548c1ff76d04')
+        balance = client.get_balance()  
+        return Response(balance)
+
+class GETTradeBalance(views.APIView):
+    def post(self, request, *args, **kwargs):
+        client = WhiteBitPrivateClient(public_key='45f78aa66fb498abdae7c3883fb57ccd', secret_key='c27bb4c14b1e9eaff868548c1ff76d04')
+        balance = client.get_trade_balance()  
+        return Response(balance)
+
+class GETTradeHistory(views.APIView):
+    def post(self, request, *args, **kwargs):
+        client = WhiteBitTradeClient(public_key='45f78aa66fb498abdae7c3883fb57ccd', secret_key='c27bb4c14b1e9eaff868548c1ff76d04')
+        history = client.get_trade_history()
+        return Response(history)
+
+
+class TransactionHistoryView(generics.GenericAPIView):
+    serializer_class = TransactionHistorySerializers
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        
+        if serializer.is_valid():
+            transaction_method = serializer.validated_data['transactionMethod']
+            address = serializer.validated_data.get('address')
+            unique_id = serializer.validated_data.get('uniqueId')
+
+            client = WhiteBitPrivateClient(public_key='45f78aa66fb498abdae7c3883fb57ccd', secret_key='c27bb4c14b1e9eaff868548c1ff76d04')
+
+            history_data = client.get_history(
+                transactionMethod=transaction_method,
+                address=address,
+                uniqueId=unique_id,
+            )
+
+            if 'error' in history_data:
+                return Response(history_data, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(history_data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

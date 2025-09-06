@@ -3,6 +3,8 @@ from django.conf import settings
 from apps.users.models import User
 from assets.choices import *
 from assets.services.generator import *
+from decimal import Decimal,ROUND_DOWN
+
 
 
 
@@ -13,7 +15,7 @@ class Finance(models.Model):
     logo = models.ImageField(upload_to='finance_logos/', blank=True, null=True)
 
     decimal = models.PositiveIntegerField(default=8, help_text="Количество знаков после запятой")
-    min_amount = models.DecimalField(max_digits=20, decimal_places=8, default=0.01)
+    min_amount = models.DecimalField(max_digits=20, decimal_places=2, default=0.01)
     max_amount = models.DecimalField(max_digits=20, decimal_places=8, default=1000.00)
 
     sell_fee = models.DecimalField(max_digits=20, decimal_places=8, default=0)
@@ -71,6 +73,18 @@ class HistoryTransactions(models.Model):
         related_name="history_to",
         verbose_name="Валюта зачисления (куда)"
     )
+    network_from = models.CharField(
+        max_length=25,
+        null=True, blank=True
+    )
+    network_to = models.CharField(
+        max_length=25,
+        null=True, blank=True
+    )
+    memo = models.CharField(
+        max_length=255,
+        null=True, blank=True
+    )
     application_id = models.IntegerField(
         unique=True,
         verbose_name="ID заявки"
@@ -85,6 +99,11 @@ class HistoryTransactions(models.Model):
         decimal_places=8,
         verbose_name="Сумма зачисления"
     )
+    total_amount = models.DecimalField(
+        max_digits=20,
+        decimal_places=8,
+        verbose_name="Сумма с учетом коммиссии"
+    )
     rate = models.DecimalField(
         max_digits=30,
         decimal_places=12,
@@ -92,7 +111,7 @@ class HistoryTransactions(models.Model):
     )
     fee = models.DecimalField(
         max_digits=20,
-        decimal_places=3,
+        decimal_places=5,
         default=0,
         verbose_name="Комиссия"
     )
@@ -120,8 +139,16 @@ class HistoryTransactions(models.Model):
         max_length=77,
         choices=STATUS_CHOICES
     )
+    inspection = models.IntegerField(
+        default=0
+    )
+    #0 = ничего, 1 = transfer, 2 = trade, 3 = transfer_to_main, 4 = withdraw
     expired = models.DateTimeField(
         verbose_name="Срок действия",
+        null=True, blank=True
+    )
+    transaction_hash = models.CharField(
+        max_length=255,
         null=True, blank=True
     )
 
@@ -129,5 +156,17 @@ class HistoryTransactions(models.Model):
         verbose_name = "История транзакции"
         verbose_name_plural = "Истории транзакций"
         
+        
     def __str__(self):
         return f"{self.user} {self.amount_from} {self.currency_from.currency} → {self.amount_to} {self.currency_to.currency}"
+    
+        
+    def save(self, *args, **kwargs):
+        fee_amount = (self.amount_from * self.fee) / 100
+        self.total_amount = self.amount_from - fee_amount
+        self.total_amount = self.total_amount * self.rate
+
+        decimal_places_to = self.currency_to.decimal
+        self.total_amount = self.total_amount.quantize(Decimal(10) ** -decimal_places_to)
+
+        super().save(*args, **kwargs)

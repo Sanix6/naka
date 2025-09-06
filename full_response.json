@@ -1,0 +1,9 @@
+{
+    "code": 3,
+    "message": "Inner validation failed",
+    "errors": {
+        "amount": [
+            "You don't have such amount for transfer (available 0, in amount: 13)"
+        ]
+    }
+}

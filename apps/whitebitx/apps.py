@@ -11,6 +11,7 @@ class WhitebitConfig(AppConfig):
         from django_otp.plugins.otp_totp.models import TOTPDevice
         from django_celery_beat.models import PeriodicTask, IntervalSchedule
         import json
+        from . import signals
         if TOTPDevice in site._registry:
             site.unregister(TOTPDevice)
 

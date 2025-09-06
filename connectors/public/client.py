@@ -11,7 +11,7 @@ from typing import List, Optional, Union
 
 class WhiteBitClient:
     def get_markets(self):
-        url = f"{settings.WHITEBIT_BASE_URL}/api/v4/public/markets"
+        url = f"https://whitebit.com/api/v4/public/markets"
         try:
             response = requests.get(url)
             response.raise_for_status()
@@ -48,11 +48,11 @@ class WhiteBitPrivateClient():
     def get_address(self, ticker, network=None):
         nonce = time.time_ns() // 1_000_000  
         
-        url = f"{settings.WHITEBIT_BASE_URL}/api/v4/main-account/address"
+        url = f"https://whitebit.com/api/v4/main-account/create-new-address"
 
         data = {
             "ticker": ticker,
-            "request": "/api/v4/main-account/address",  
+            "request": "/api/v4/main-account/create-new-address",  
             "nonce": nonce
         }
 
@@ -86,7 +86,7 @@ class WhiteBitPrivateClient():
                     addresses=None, uniqueId=None, limit=50, offset=0, status=None):
         nonce = time.time_ns() // 1_000_000  
         
-        url = f"https://whitebit.com/api/v4/main-account/history"
+        url = f"{settings.WHITEBIT_BASE_URL}/api/v4/main-account/history"
 
         params = {
             "transactionMethod": transactionMethod,
@@ -127,9 +127,45 @@ class WhiteBitPrivateClient():
 
         url = f'https://whitebit.com/api/v4/main-account/balance'
 
+
         params = {
             "nonce": nonce,
             "request": '/api/v4/main-account/balance'
+        }
+
+        data_json = json.dumps(params, separators=(',', ':'))  
+        
+        payload = base64.b64encode(data_json.encode('ascii')).decode('ascii')
+
+        signature = hmac.new(self.secret_key.encode('ascii'), payload.encode('ascii'), hashlib.sha512).hexdigest()
+
+        headers = {
+            'Content-Type': 'application/json',
+            'X-TXC-APIKEY': self.public_key,
+            'X-TXC-PAYLOAD': payload,
+            'X-TXC-SIGNATURE': signature,
+        }
+
+        try:
+            response = requests.post(url, headers=headers, data=data_json)
+            
+            if response.status_code == 200:
+                return response.json()
+            else:
+                return {"error": f"Ошибка {response.status_code}: {response.text}"}
+        
+        except requests.exceptions.RequestException as e:
+            return {"error": f"Request failed: {str(e)}"}
+
+    def get_trade_balance(self):
+        nonce = time.time_ns() // 1_000_000
+
+        url = f'https://whitebit.com/api/v4/trade-account/balance'
+
+
+        params = {
+            "nonce": nonce,
+            "request": '/api/v4/trade-account/balance'
         }
 
         data_json = json.dumps(params, separators=(',', ':'))  

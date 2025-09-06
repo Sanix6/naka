@@ -235,6 +235,8 @@ secret_key = os.getenv('secret_key')
 
 
 
+
+
 # CKEDITOR_CONFIGS = {
 #     'default': {
 #         "height": 400,
