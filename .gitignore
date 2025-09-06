@@ -6,3 +6,7 @@ test.txtlogs/*.log*
 logs/*.log*
 logs/*.log*
 logs/*.log*
+.market.py
+.script.py
+.transfer.py
+.update_decimal.py
