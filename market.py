@@ -60,8 +60,8 @@ if __name__ == "__main__":
     client = WhiteBitPrivateClient(public_key, secret_key)
 
     market = "LTC_USDT"  
-    side = "buy"  
-    amount = 0.130000
+    side = "sell"  
+    amount = 0.11000
 
     result = client.create_market_order(market, side, amount)
     print(result)

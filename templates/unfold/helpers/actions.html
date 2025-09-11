@@ -1,0 +1,24 @@
+{% load i18n %}
+
+{% if actions %}
+  <div class="unfold-actions-bar flex items-center justify-between px-4 py-2 bg-primary-900 text-white">
+    
+    <!-- Левая часть: выпадающий список + кнопка -->
+    <div class="flex items-center gap-2">
+      {{ action_form.action }}
+      <button type="submit"
+              name="index"
+              class="px-4 py-2 rounded-md bg-primary-500 hover:bg-primary-600 transition text-white font-medium shadow">
+        {% translate 'Выполнить' %}
+      </button>
+    </div>
+
+    <!-- Правая часть: счётчик выбранных -->
+    <div class="text-sm opacity-80">
+      {% blocktrans count counter=cl.result_count %}
+        Выбрано {{ counter }}
+      {% endblocktrans %}
+    </div>
+
+  </div>
+{% endif %}

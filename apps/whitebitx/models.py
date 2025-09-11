@@ -6,8 +6,6 @@ from assets.services.generator import *
 from decimal import Decimal,ROUND_DOWN
 
 
-
-
 class Finance(models.Model):
     name = models.CharField(max_length=100) 
     currency = models.CharField(max_length=10, db_index=True)  
@@ -17,10 +15,11 @@ class Finance(models.Model):
     decimal = models.PositiveIntegerField(default=8, help_text="Количество знаков после запятой")
     min_amount = models.DecimalField(max_digits=20, decimal_places=2, default=0.01)
     max_amount = models.DecimalField(max_digits=20, decimal_places=8, default=1000.00)
+    fee  = models.DecimalField(max_digits=30, decimal_places=12, default=0)
 
     sell_fee = models.DecimalField(max_digits=20, decimal_places=8, default=0)
     buy_fee = models.DecimalField(max_digits=20, decimal_places=8, default=0)
-
+    
     status_buy = models.BooleanField(default=True, help_text="Доступна для покупки")
     status_sell = models.BooleanField(default=True, help_text="Доступна для продажи")
 
@@ -37,7 +36,7 @@ class Rates(models.Model):
     currency_f = models.ForeignKey(Finance, on_delete=models.CASCADE, related_name='rates_from')
     currency_t = models.ForeignKey(Finance, on_delete=models.CASCADE, related_name='rates_to')
     rate = models.DecimalField(max_digits=30, decimal_places=12, default=0)
-    fixed  = models.DecimalField(max_digits=30, decimal_places=12, default=0)
+    fixed  = models.DecimalField('Коммиссия', max_digits=30, decimal_places=12, default=0)
     rate_sell = models.DecimalField(max_digits=20, decimal_places=10, default=1)
     rate_buy = models.DecimalField(max_digits=20, decimal_places=10, default=1)
 

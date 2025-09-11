@@ -25,7 +25,7 @@ class CurrencySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Finance
-        fields = ["id","code", "min_amount", "max_amount", "name", "icon",'decimal', "networks"]
+        fields = ["id","code", "min_amount", "max_amount", "name", "icon",'decimal', 'fee',"networks"]
 
     def get_icon(self, obj):
         request = self.context.get("request")
@@ -165,6 +165,26 @@ class CreateApplicationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['status'] = "1"
         return super().create(validated_data)
+    
+    def validate(self, data):
+        amount_from = data['amount_from']
+        currency_from = data['currency_from']
+        currency_to = data['currency_to']
+        
+        try:
+            rate = Rates.objects.get(currency_f=currency_from, currency_t=currency_to)
+        except Rates.DoesNotExist:
+            raise serializers.ValidationError("Курс не найден для выбранных валют.")
+
+        amount_to = amount_from * rate.rate
+        
+        amount_to -= (amount_to * rate.fixed / 100) 
+
+        finance = Finance.objects.get(network=currency_to.network)
+        amount_to -= finance.fee
+
+        data['amount_to'] = amount_to
+        return data
 
 
 class StatusSerializers(serializers.Serializer):

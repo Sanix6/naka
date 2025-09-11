@@ -10,8 +10,9 @@ class FinanceAdmin(admin.ModelAdmin):
     list_display = (
         'logo_display','name', 'currency', 'network', 'decimal',
         'min_amount', 'max_amount',
-        'status_buy', 'status_sell', 'sell_fee', 'buy_fee', 
+        'status_buy', 'status_sell', 'fee', 
     )
+    actions = ['delete_selected'] 
     list_display_links = list_display
     search_fields = ('name', 'currency')
     list_filter = ('status_buy', 'status_sell')
@@ -34,10 +35,10 @@ class RatesAdmin(admin.ModelAdmin):
         return format_html(
             '<span style="display:inline-block; padding:6px 12px; '
             'font-size:14px; font-weight:500; color:#fff; '
-            'background-color:#EE4B2B; border-radius:8px; '
+            'background-color:#EE4B2B; border-radius:2px; '
             'text-align:center; width:120px; text-transform: uppercase;">{}</span>'
             '<span style="display:inline-block; font-size:12px; color:#fff; margin-left:10px; '
-            'background-color:#EE4B2B; border-radius:4px; padding:2px 6px;">{}</span>',
+            'background-color:#EE4B2B; border-radius:2px; padding:2px 6px;">{}</span>',
             obj.currency_f.currency, obj.currency_f.network
         )
     get_currency_from.short_description = 'From'
@@ -46,10 +47,10 @@ class RatesAdmin(admin.ModelAdmin):
         return format_html(
             '<span style="display:inline-block; padding:6px 12px; '
             'font-size:14px; font-weight:500; color:#fff; '
-            'background-color:#4caf50; border-radius:8px; '
+            'background-color:#4caf50; border-radius:2px; '
             'text-align:center; width:120px; text-transform: uppercase;">{}</span>'
             '<span style="display:inline-block; font-size:12px; color:#fff; margin-left:10px; '
-            'background-color:#4caf50; border-radius:4px; padding:2px 6px;">{}</span>',
+            'background-color:#4caf50; border-radius:2px; padding:2px 6px;">{}</span>',
             obj.currency_t.currency, obj.currency_t.network
         )
     get_currency_to.short_description = 'To'
@@ -78,6 +79,7 @@ class HistoryTransactionsAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
     list_display_links = list_display
+    
 
     def currency_from_display(self, obj):
         if obj.currency_from and obj.currency_from.logo and obj.currency_from.logo.url:

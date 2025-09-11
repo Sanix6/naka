@@ -121,7 +121,7 @@
 .actions input[type="submit"]:hover,
 .submit-row input[type="submit"]:hover,
 .submit-row button:hover {
-  background-color: #02837f;
+  /* background-color: #02837f; */
   transform: translateY(-1px);
 }
 

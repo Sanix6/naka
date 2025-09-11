@@ -307,6 +307,9 @@ UNFOLD = {
         },
     ],
     "DARK_MODE": True,
+    "ACTIONS_SELECTION_COUNTER": True,   
+    "ACTIONS_STICKY_SUBMIT": True,  
+    "ACTIONS_INLINE": True,
 
     "SIDEBAR": {
         "show_search": False,
@@ -389,9 +392,9 @@ UNFOLD = {
         "light": lambda request: static("log.jpg"),
         "dark": lambda request: static("log.jpg"),
     },
-    "STYLES": [
-        lambda request: f"{static('css/adminjs.css')}",
-    ],
+    # "STYLES": [
+    #     lambda request: f"{static('css/adminjs.css')}",
+    # ],
     "SCRIPTS": [
         lambda request: f"{static('js/admin.js')}",
     ],

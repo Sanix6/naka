@@ -103,13 +103,13 @@ def update_rates_from_ticker(self):
     write_log("rates_update.log", "Task finished\n")
     return {"updated": len(to_update), "missing": not_found[:20]}
 
-
 @shared_task
 def close_expired_transactions():
     now = timezone.now()
     updated = HistoryTransactions.objects.filter(
-        expired__lt=now
-    ).exclude(status="4").update(status="4")
+        expired__lt=now,
+        status__in=["1", "2"] 
+    ).update(status="4")
     write_log("transactions.log", f"Closed {updated} expired transactions")
     return f"Обновлено {updated} транзакций"
 
@@ -132,7 +132,8 @@ def check_transactions():
 
         transactions = HistoryTransactions.objects.filter(
             invoice_from=record_address,
-        ).exclude(status="3")
+            status="2"
+        )
 
         for tx in transactions:
             if record_status == 3 and record_amount >= tx.amount_from:
@@ -147,6 +148,7 @@ def check_transactions():
                     f"{old_status} -> 3 | amount_tx={record_amount} | "
                     f"amount_expected={tx.amount_from} | hash={tx.transaction_hash}",
                 )
+
                 
 
 
@@ -164,23 +166,23 @@ def transfer_task(self, application_id: int, method: str = "deposit"):
 
         client = WhiteBitTradeClient(public_key=WHITEBIT_PUBLIC_KEY, secret_key=WHITEBIT_SECRET_KEY)
         result = client.create_transfer(ticker, amount, method)
-        
-        if "Ошибка 201" in result:
-            return application_id
 
-        if "error" in result or "errors" in result:
+        if (isinstance(result, dict) and result.get("error") and "Ошибка 201" in result.get("error", "")) \
+           or not ("error" in result or "errors" in result):
+            write_log("transfer.log", f"SUCCESS User={user_id}, App={application_id}, {amount} {ticker}")
+            tx.inspection = 1
+            tx.save(update_fields=["inspection"])
+            market_order_task.apply_async(args=[application_id], countdown=3)
+
+        elif "error" in result or "errors" in result:
             write_log("transfer.log", f"ERROR User={user_id}, App={application_id}, {amount} {ticker}, {result}")
             raise self.retry(exc=Exception("Transfer error"))
 
-        tx.inspection = 1
-        tx.save(update_fields=["inspection"])
-        write_log("transfer.log", f"SUCCESS User={user_id}, App={application_id}, {amount} {ticker}")
-        
-        market_order_task.apply_async(args=[application_id], countdown=3)
-
     except HistoryTransactions.DoesNotExist:
         write_log("transfer.log", f"ERROR Application={application_id} not found")
+
     return application_id
+
 
 
 @shared_task(bind=True, max_retries=5, default_retry_delay=20)
@@ -192,26 +194,38 @@ def market_order_task(self, application_id: int):
             return application_id
 
         user_id = tx.user.id
-        market = f"{tx.currency_to.currency.upper()}_{tx.currency_from.currency.upper()}"
-        side = "buy"
-        amount = float(tx.total_amount)
+        quote_currency = tx.currency_to.currency.upper()
+        base_currency = tx.currency_from.currency.upper()
+
+        if quote_currency == "USDT":
+            market = f"{base_currency}_{quote_currency}"
+            side = "sell"
+            amount = Decimal(tx.amount_from).quantize(Decimal('1.' + '0' * tx.currency_from.decimal))  
+        else:
+            market = f"{quote_currency}_{base_currency}"
+            side = "buy"
+            amount = Decimal(tx.amount_to).quantize(Decimal('1.' + '0' * tx.currency_to.decimal))  
 
         client = WhiteBitTradeClient(public_key=WHITEBIT_PUBLIC_KEY, secret_key=WHITEBIT_SECRET_KEY)
-        result = client.create_market_order(market, side, amount)
 
-        if "error" in result:
+        result = client.create_market_order(market, side, float(amount))
+
+        if "error" in result or "errors" in result:
             write_log("market.log", f"ERROR User={user_id}, App={application_id}, Market={market}, {result}")
             raise self.retry(exc=Exception("Market order error"))
 
         tx.inspection = 2
         tx.save(update_fields=["inspection"])
-        write_log("market.log", f"SUCCESS User={user_id}, App={application_id}, Market={market}, Amount={amount}, {result}")
+
+        write_log("market.log", f"SUCCESS User={user_id}, App={application_id}, Market={market}, Amount={amount}, Side={side}, {result}")
 
         transfer_to_main_task.apply_async(args=[application_id], countdown=3)
 
     except HistoryTransactions.DoesNotExist:
         write_log("market.log", f"ERROR Application={application_id} not found")
+
     return application_id
+
 
 
 @shared_task(bind=True, max_retries=10, default_retry_delay=30)
@@ -229,18 +243,20 @@ def transfer_to_main_task(self, application_id: int):
         client = WhiteBitTradeClient(public_key=WHITEBIT_PUBLIC_KEY, secret_key=WHITEBIT_SECRET_KEY)
         result = client.transfer_to_main(ticker, amount)
 
-        if "error" in result or "errors" in result:
+        if (isinstance(result, dict) and result.get("error") and "Ошибка 201" in result.get("error", "")) \
+           or not ("error" in result or "errors" in result):
+            write_log("trade.log", f"SUCCESS User={user_id}, App={application_id}, {amount} {ticker}")
+            tx.inspection = 3
+            tx.save(update_fields=["inspection"])
+            withdraw_task.apply_async(args=[application_id], countdown=3)
+
+        elif "error" in result or "errors" in result:
             write_log("trade.log", f"ERROR User={user_id}, App={application_id}, {amount} {ticker}, {result}")
             raise self.retry(exc=Exception("Transfer to main error"))
 
-        tx.inspection = 3
-        tx.save(update_fields=["inspection"])
-        write_log("trade.log", f"SUCCESS User={user_id}, App={application_id}, {amount} {ticker}")
-
-        withdraw_task.apply_async(args=[application_id], countdown=3)
-
     except HistoryTransactions.DoesNotExist:
         write_log("trade.log", f"ERROR Application={application_id} not found")
+
     return application_id
 
 
@@ -257,21 +273,45 @@ def withdraw_task(self, application_id: int):
         amount = str(tx.total_amount)
         address = tx.invoice_to
 
+        network = tx.currency_to.network.upper() if tx.currency_to.currency.upper() != tx.currency_to.network.upper() else ""
+
         client = WhiteBitTradeClient(public_key=WHITEBIT_PUBLIC_KEY, secret_key=WHITEBIT_SECRET_KEY)
-        result = client.withdraw(ticker, amount, address, network="", uniqueId=str(uuid.uuid4()), memo="")
+        result = client.withdraw(
+            ticker,
+            amount,
+            address,
+            network=network,
+            uniqueId=str(uuid.uuid4()),
+            memo=""
+        )
 
-        if "error" in result:
-            write_log("withdraw.log", f"ERROR User={user_id}, App={application_id}, {amount} {ticker}, {result}")
-            raise self.retry(exc=Exception("Withdraw error"))
+        if isinstance(result, dict):
+            error_msg = result.get("error")
+            if error_msg and "Ошибка 201" in error_msg:
+                tx.status = "5"
+                tx.transaction_hash = result.get("transactionId", "")
+                tx.save(update_fields=["status", "transaction_hash"])
+                write_log(
+                    "withdraw.log",
+                    f"SUCCESS(201) User={user_id}, App={application_id}, {amount} {ticker}, Address={address}, Network={network or 'N/A'}"
+                )
+                return application_id
+            elif error_msg:
+                write_log(
+                    "withdraw.log",
+                    f"ERROR User={user_id}, App={application_id}, {amount} {ticker}, {result}"
+                )
+                raise self.retry(exc=Exception(f"Withdraw error: {result}"))
 
-        tx.status = "5"  
-        tx.transaction_hash = result.get("transactionId", "")
-        tx.save(update_fields=["status", "inspection", "transaction_hash"])
-
-        write_log("withdraw.log", f"SUCCESS User={user_id}, App={application_id}, {amount} {ticker}, Address={address}")
+        write_log(
+            "withdraw.log",
+            f"Unexpected response User={user_id}, App={application_id}, {amount} {ticker}, Result={result}"
+        )
+        raise self.retry(exc=Exception(f"Withdraw unexpected response: {result}"))
 
     except HistoryTransactions.DoesNotExist:
         write_log("withdraw.log", f"ERROR Application={application_id} not found")
+
     return application_id
 
 

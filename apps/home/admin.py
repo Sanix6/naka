@@ -4,7 +4,6 @@ from django.utils.html import mark_safe
 from unfold.admin import ModelAdmin
 
 
-
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):  
     list_display = ['id', 'title', 'get_image_html']
@@ -14,15 +13,17 @@ class NewsAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
     fieldsets = (
-        ('Основная информация', {'fields': ('title', 'url','image')}), 
+        ('Основная информация', {'fields': ('title', 'url', 'image')}), 
         ('Контент', {'fields': ('slug', 'content')}),
     )
 
     def get_image_html(self, obj):
         if obj.image:
-            return mark_safe(f'<img src="{obj.image.url}" width="80" style="object-fit: contain; border: 1px solid #ccc; border-radius: 4px;" />')
+            return mark_safe(f'<img src="{obj.image.url}" width="120" padding="40" style="object-fit: cover; border: 2px solid #03A39E; border-radius: 8px;" />')
         return "—"
     get_image_html.short_description = 'Изображение'
+
+
 
 
 @admin.register(FeedBack)
